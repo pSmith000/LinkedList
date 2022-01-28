@@ -36,7 +36,7 @@ inline Iterator<T> Iterator<T>::operator++()
 	if (m_current->next == nullptr)
 		return Iterator<T>(m_current);
 	else
-		return Iterator<T>(m_current->next);
+		return Iterator<T>(m_current = m_current->next);
 }
 
 template<typename T>
@@ -45,7 +45,7 @@ inline Iterator<T> Iterator<T>::operator--()
 	if (m_current->previous == nullptr)
 		return Iterator<T>(m_current);
 	else
-		return Iterator<T>(m_current->previous);
+		return Iterator<T>(m_current = m_current->previous);
 }
 
 template<typename T>
@@ -67,5 +67,5 @@ inline const bool Iterator<T>::operator!=(const Iterator<T>& iter)
 template<typename T>
 inline T Iterator<T>::operator*()
 {
-	return T();
+	return m_current;
 }
