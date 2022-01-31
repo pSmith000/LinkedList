@@ -56,11 +56,24 @@ inline List<T>::List(const List<T>& other)
 template<typename T>
 inline List<T>::~List()
 {
+	destroy();
 }
 
 template<typename T>
 inline void List<T>::destroy()
 {
+	Node<T>* currentNode = m_first;
+	Node<T>* nextNode;
+
+	for (int i = 0; i < getLength(); i++)
+	{
+		nextNode = currentNode->next;
+		delete currentNode;
+		m_nodeCount--;
+		currentNode = nextNode;
+	}
+
+	initialize();
 }
 
 template<typename T>
@@ -80,7 +93,19 @@ inline Iterator<T> List<T>::end() const
 template<typename T>
 inline bool List<T>::contains(const T object) const
 {
-	return false;
+	bool objectFound = false;
+	Node<T>* currentNode = m_first;
+
+	for (int i = 0; i < getLength(); i++)
+	{
+		if (currentNode->data == object)
+		{
+			objectFound = true;
+		}
+		currentNode = currentNode->next;
+	}
+
+	return objectFound;
 }
 
 template<typename T>
@@ -151,6 +176,7 @@ inline bool List<T>::insert(const T& value, int index)
 		//Make a new node at the front
 		pushFront(value);
 		nodeInserted = true;
+		return true;
 	}
 		
 	//If the index is at the end of the list
@@ -159,6 +185,7 @@ inline bool List<T>::insert(const T& value, int index)
 		//Make a new node at the back
 		pushBack(value);
 		nodeInserted = true;
+		return true;
 	}
 		
 	//If the index is within the bounds
@@ -253,7 +280,21 @@ inline bool List<T>::isEmpty() const
 template<typename T>
 inline bool List<T>::getData(Iterator<T>& iter, int index)
 {
-	return false;
+	if (index <= 0 || index > getLength())
+		return false;
+
+	Iterator<T> tempIterator = begin();
+
+	for (int i = 0; i < getLength(); i++)
+	{
+		if (tempIterator == iter)
+		{
+			++iter;
+		}
+		++tempIterator;
+	}
+
+	return true;
 }
 
 template<typename T>
@@ -265,7 +306,16 @@ inline int List<T>::getLength() const
 template<typename T>
 inline const List<T>& List<T>::operator=(const List<T>& otherList)
 {
-	// TODO: insert return statement here
+	destroy();
+	Node<T>* otherCurrentNode = otherList.m_first;
+
+	for (int i = 0; i < otherList.m_nodeCount; i++)
+	{
+		insert(otherCurrentNode->data, i);
+		otherCurrentNode = otherCurrentNode->next;
+	}
+
+	return *this;
 }
 
 template<typename T>
