@@ -91,14 +91,20 @@ inline void List<T>::pushFront(const T& value)
 
 	if (m_first != nullptr)
 	{
-		//Sets the first nodes previous to be the new node
-		m_first->previous = newNode;
-		//Sets the new nodes next to be the first node
 		newNode->next = m_first;
 	}
 	
 	//Sets the new node as the first node
 	m_first = newNode;
+
+	if (newNode->next != nullptr)
+	{
+		newNode->next->previous = newNode;
+	}
+	else
+	{
+		m_last = newNode;
+	}
 
 	//Increases the node count
 	m_nodeCount++;
@@ -112,8 +118,6 @@ inline void List<T>::pushBack(const T& value)
 
 	if (m_last != nullptr)
 	{
-		//Sets the last nodes next to be the new node
-		m_last->next = newNode;
 		//Sets the new nodes previous to be the last node
 		newNode->previous = m_last;
 	}
@@ -121,6 +125,12 @@ inline void List<T>::pushBack(const T& value)
 	//Sets the new node to be the last
 	m_last = newNode;
 
+	if (m_last->previous != nullptr)
+	{
+		newNode->previous->next = newNode;
+	}
+	else
+		m_first = newNode;
 	//Increases the node count
 	m_nodeCount++;
 }
@@ -190,26 +200,36 @@ inline bool List<T>::remove(const T& value)
 	//Two temp variables to use to insert the new node
 	Node<T>* nodeToRemove = m_first;
 
-	for (Iterator<T> iter = begin(); iter != end(); iter++)
+	for (Iterator<T> iter = begin(); iter != end(); ++iter)
 	{
 		if (nodeToRemove->data == value)
 		{
 			nodeToRemove->previous->next = nodeToRemove->next;
 			nodeToRemove->next->previous = nodeToRemove->previous;
 			delete(nodeToRemove);
+			nodeRemoved = true;
+			m_nodeCount--;
+			break;
 		}
-
-		nodeToRemove = nodeToRemove->next;
+		else
+			nodeToRemove = nodeToRemove->next;
 	}
+	return nodeRemoved;
 
 }
 
 template<typename T>
 inline void List<T>::print() const
 {
-	for (Iterator<T> iter = begin(); iter != end(); ++iter)
+	Node<T>* currentNode = m_first;
+
+	for (int i = 0; i < getLength(); i++)
 	{
-		std::cout << *iter << std::endl;
+		if (currentNode != nullptr) 
+		{
+			std::cout << currentNode->data << std::endl;
+			currentNode = currentNode->next;
+		}
 	}
 }
 
@@ -251,16 +271,22 @@ inline const List<T>& List<T>::operator=(const List<T>& otherList)
 template<typename T>
 inline void List<T>::sort()
 {
-	for (int i = 0; i < m_nodeCount; i++)
+	Node<T>* currentNode = m_first;
+	Node<T>* tempNode = new Node<T> ();
+
+	for (int i = 0; i < m_nodeCount - 1; i++)
 	{
-		for (int j = i + 1; j < m_nodeCount; j++)
+		currentNode = m_first;
+
+		for (int j = 0; j < m_nodeCount - 1; j++)
 		{
-			if (arrToBeSorted[j] < arrToBeSorted[i])
+			if (currentNode->next->data < currentNode->data)
 			{
-				T temp = arrToBeSorted[i];
-				arrToBeSorted[i] = arrToBeSorted[j];
-				arrToBeSorted[j] = temp;
+				tempNode->data = currentNode->next->data;
+				currentNode->next->data = currentNode->data;
+				currentNode->data = tempNode->data;
 			}
+			currentNode = currentNode->next;
 		}
 	}
 }
