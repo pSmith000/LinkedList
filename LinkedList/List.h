@@ -89,10 +89,14 @@ inline void List<T>::pushFront(const T& value)
 	//Creates a new node with the given value
 	Node<T>* newNode = new Node<T>(value);
 
-	//Sets the first nodes previous to be the new node
-	m_first->previous = newNode;
-	//Sets the new nodes next to be the first node
-	newNode->next = m_first;
+	if (m_first != nullptr)
+	{
+		//Sets the first nodes previous to be the new node
+		m_first->previous = newNode;
+		//Sets the new nodes next to be the first node
+		newNode->next = m_first;
+	}
+	
 	//Sets the new node as the first node
 	m_first = newNode;
 
@@ -106,10 +110,14 @@ inline void List<T>::pushBack(const T& value)
 	//Creates a new node with the given value
 	Node<T>* newNode = new Node<T>(value);
 
-	//Sets the last nodes next to be the new node
-	m_last->next = newNode;
-	//Sets the new nodes previous to be the last node
-	newNode->previous = m_last;
+	if (m_last != nullptr)
+	{
+		//Sets the last nodes next to be the new node
+		m_last->next = newNode;
+		//Sets the new nodes previous to be the last node
+		newNode->previous = m_last;
+	}
+	
 	//Sets the new node to be the last
 	m_last = newNode;
 
@@ -182,10 +190,18 @@ inline bool List<T>::remove(const T& value)
 	//Two temp variables to use to insert the new node
 	Node<T>* nodeToRemove = m_first;
 
-	if (nodeToRemove->data == value)
+	for (Iterator<T> iter = begin(); iter != end(); iter++)
 	{
+		if (nodeToRemove->data == value)
+		{
+			nodeToRemove->previous->next = nodeToRemove->next;
+			nodeToRemove->next->previous = nodeToRemove->previous;
+			delete(nodeToRemove);
+		}
 
+		nodeToRemove = nodeToRemove->next;
 	}
+
 }
 
 template<typename T>
@@ -193,7 +209,7 @@ inline void List<T>::print() const
 {
 	for (Iterator<T> iter = begin(); iter != end(); ++iter)
 	{
-		std::cout << &iter << std::endl;
+		std::cout << *iter << std::endl;
 	}
 }
 
@@ -235,4 +251,16 @@ inline const List<T>& List<T>::operator=(const List<T>& otherList)
 template<typename T>
 inline void List<T>::sort()
 {
+	for (int i = 0; i < m_nodeCount; i++)
+	{
+		for (int j = i + 1; j < m_nodeCount; j++)
+		{
+			if (arrToBeSorted[j] < arrToBeSorted[i])
+			{
+				T temp = arrToBeSorted[i];
+				arrToBeSorted[i] = arrToBeSorted[j];
+				arrToBeSorted[j] = temp;
+			}
+		}
+	}
 }
