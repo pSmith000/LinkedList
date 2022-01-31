@@ -227,12 +227,24 @@ inline bool List<T>::remove(const T& value)
 	//Two temp variables to use to insert the new node
 	Node<T>* nodeToRemove = m_first;
 
-	for (Iterator<T> iter = begin(); iter != end(); ++iter)
+	for (int i = 0; i < m_nodeCount; i++)
 	{
 		if (nodeToRemove->data == value)
 		{
-			nodeToRemove->previous->next = nodeToRemove->next;
-			nodeToRemove->next->previous = nodeToRemove->previous;
+			if (nodeToRemove->previous == nullptr)
+			{
+				m_first = nodeToRemove->next;
+			}
+			else if (nodeToRemove->next == nullptr)
+			{
+				m_last = nodeToRemove->previous;
+			}
+			else
+			{
+				nodeToRemove->previous->next = nodeToRemove->next;
+				nodeToRemove->next->previous = nodeToRemove->previous;
+			}
+			
 			delete(nodeToRemove);
 			nodeRemoved = true;
 			m_nodeCount--;
