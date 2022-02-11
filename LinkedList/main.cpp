@@ -25,16 +25,17 @@ void main()
 	list.insert(10, 0);
 	list.insert(45, 1);
 	list.pushBack(47);
-	list.destroy();
 	list.print();
 
 	std::cout << " " << std::endl;
 
 	List<int> listTwo = List<int>();
+
 	listTwo = list;
 
 	list.destroy();
-	listTwo.destroy();
+
+	listTwo.pushFront(88);
 
 	listTwo.print();
 

@@ -47,10 +47,13 @@ inline List<T>::List()
 template<typename T>
 inline List<T>::List(const List<T>& other)
 {
-	//Creates a list with the other lists variables
-	m_first = other.m_first;
-	m_last = other.m_last;
-	m_nodeCount = other.getLength();
+	Node<T>* otherCurrentNode = other.m_first;
+
+	for (int i = 0; i < other.m_nodeCount; i++)
+	{
+		insert(otherCurrentNode->data, i);
+		otherCurrentNode = otherCurrentNode->next;
+	}
 }
 
 template<typename T>
@@ -87,7 +90,7 @@ template<typename T>
 inline Iterator<T> List<T>::end() const
 {
 	//Returns the last node in the list
-	return Iterator<T>(m_last);
+	return Iterator<T>(m_last->next);
 }
 
 template<typename T>
@@ -229,27 +232,36 @@ inline bool List<T>::remove(const T& value)
 
 	for (int i = 0; i < m_nodeCount; i++)
 	{
+		//If this is the node to remove
 		if (nodeToRemove->data == value)
 		{
+			//If this is the first node
 			if (nodeToRemove->previous == nullptr)
 			{
+				//Set the nodes next to be the first in the list
 				m_first = nodeToRemove->next;
 			}
+			//If this is the last node
 			else if (nodeToRemove->next == nullptr)
 			{
+				//Set the nodes previous to be last
 				m_last = nodeToRemove->previous;
 			}
+			//If this is a node in the middle
 			else
 			{
+				//Set the nodes to be pointing at the right spots
 				nodeToRemove->previous->next = nodeToRemove->next;
 				nodeToRemove->next->previous = nodeToRemove->previous;
 			}
 			
+			//Delete the node to remove and lower the node count by one
 			delete(nodeToRemove);
 			nodeRemoved = true;
 			m_nodeCount--;
 			break;
 		}
+		//If this wasn't the right node to remove, got to the next one
 		else
 			nodeToRemove = nodeToRemove->next;
 	}
@@ -260,12 +272,15 @@ inline bool List<T>::remove(const T& value)
 template<typename T>
 inline void List<T>::print() const
 {
+	//Set a new node to be the first
 	Node<T>* currentNode = m_first;
 
 	for (int i = 0; i < getLength(); i++)
 	{
+		//If the current node is not null
 		if (currentNode != nullptr) 
 		{
+			//Print out the data for every node
 			std::cout << currentNode->data << std::endl;
 			currentNode = currentNode->next;
 		}
@@ -275,6 +290,7 @@ inline void List<T>::print() const
 template<typename T>
 inline void List<T>::initialize()
 {
+	//Sets all variables to be base
 	m_first = nullptr;
 	m_last = nullptr;
 	m_nodeCount = 0;
