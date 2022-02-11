@@ -311,15 +311,11 @@ inline bool List<T>::getData(Iterator<T>& iter, int index)
 	if (index <= 0 || index > getLength())
 		return false;
 
-	Iterator<T> tempIterator = begin();
+	iter = begin();
 
-	for (int i = 0; i < getLength(); i++)
+	for (int i = 0; i < index; i++)
 	{
-		if (tempIterator == iter)
-		{
-			++iter;
-		}
-		++tempIterator;
+		++iter;
 	}
 
 	return true;
