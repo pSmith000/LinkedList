@@ -4,39 +4,29 @@
 void main()
 {
 	List<int> list = List<int>();
+	List<int> listTwo;
 
-	list.pushBack(2);
-	list.pushFront(1);
-	list.pushFront(12);
-	list.pushBack(15);
-	list.pushBack(14);
-	list.insert(200, 5);
-	list.insert(149, 0);
-	list.remove(200);
-	list.remove(149);
 	list.sort();
-	
-	list.print();
-
-	std::cout << " " << std::endl;
-
-	list.destroy();
-	list.destroy();
-	list.insert(10, 0);
-	list.insert(45, 1);
-	list.pushBack(47);
-	list.print();
-
-	std::cout << " " << std::endl;
-
-	List<int> listTwo = List<int>();
-
+	list.pushBack(10);
+	list.pushFront(21);
+	list.insert(20, 1);
+	list.insert(50, -1);
+	list.insert(40, 5);
+	list.sort();
+	list.initialize();
+	listTwo.insert(60, 1);
+	listTwo.sort();
 	listTwo = list;
 
-	list.destroy();
-
-	listTwo.pushFront(88);
+	for (Iterator<int> iter = list.begin(); iter != list.end(); ++iter)
+	{
+		if (*iter == 10)
+		{
+			std::cout << "success" << std::endl;
+		}
+	}
 
 	listTwo.print();
+	list.print();
 
 }

@@ -33,7 +33,7 @@ inline Iterator<T>::Iterator(Node<T>* node)
 template<typename T>
 inline Iterator<T> Iterator<T>::operator++()
 {
-	if (m_current->next == nullptr)
+	if (m_current == nullptr)
 		return Iterator<T>(m_current);
 	else
 		return Iterator<T>(m_current = m_current->next);
@@ -51,6 +51,10 @@ inline Iterator<T> Iterator<T>::operator--()
 template<typename T>
 inline const bool Iterator<T>::operator==(const Iterator<T>& iter)
 {
+	if ((bool)(m_current == nullptr) ^ (bool)(iter.m_current == nullptr))
+		return false;
+	if (m_current == nullptr && iter.m_current == nullptr)
+		return true;
 	return m_current->data == iter.m_current->data &&
 		m_current->next == iter.m_current->next &&
 		m_current->previous == iter.m_current->previous;
@@ -59,6 +63,10 @@ inline const bool Iterator<T>::operator==(const Iterator<T>& iter)
 template<typename T>
 inline const bool Iterator<T>::operator!=(const Iterator<T>& iter)
 {
+	if ((bool)(m_current == nullptr) ^ (bool)(iter.m_current == nullptr))
+		return true;
+	if (m_current == nullptr && iter.m_current == nullptr)
+		return false;
 	return !(m_current->data == iter.m_current->data &&
 		m_current->next == iter.m_current->next &&
 		m_current->previous == iter.m_current->previous);
