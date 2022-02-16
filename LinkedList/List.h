@@ -409,6 +409,7 @@ inline void List<T>::initialize()
 template<typename T>
 inline bool List<T>::isEmpty() const
 {
+	//if the first and last nodes are null and the node count is 0 then return true
 	if (m_first == nullptr && m_last == nullptr && m_nodeCount == 0)
 		return true;
 	else
@@ -418,13 +419,17 @@ inline bool List<T>::isEmpty() const
 template<typename T>
 inline bool List<T>::getData(Iterator<T>& iter, int index)
 {
+	//if the index is outside of the bounds return false
 	if (index <= 0 || index > getLength())
 		return false;
 
+	//set the iter to look at the first node
 	iter = begin();
 
+	//for the number of the index
 	for (int i = 0; i < index; i++)
 	{
+		//cycle through until the iter is pointing at the correct node
 		++iter;
 	}
 
@@ -434,42 +439,53 @@ inline bool List<T>::getData(Iterator<T>& iter, int index)
 template<typename T>
 inline int List<T>::getLength() const
 {
+	//return the number of nodes
 	return m_nodeCount;
 }
 
 template<typename T>
 inline const List<T>& List<T>::operator=(const List<T>& otherList)
 {
+	//destroy the list and create a node for iterating
 	destroy();
 	Node<T>* otherCurrentNode = otherList.m_first;
 
+	//for the length of the other list
 	for (int i = 0; i < otherList.m_nodeCount; i++)
 	{
+		//insert the nodes at the same points in the new list as the other list and iterate
 		insert(otherCurrentNode->data, i);
 		otherCurrentNode = otherCurrentNode->next;
 	}
 
+	//return the derederence of this list
 	return *this;
 }
 
 template<typename T>
 inline void List<T>::sort()
 {
+	//Set a current node and temp node to iterate
 	Node<T>* currentNode = m_first;
 	Node<T>* tempNode = new Node<T> ();
 
+	//for the number of nodes minus 1
 	for (int i = 0; i < m_nodeCount - 1; i++)
 	{
+		//set the current node back to the first one on every loop
 		currentNode = m_first;
 
 		for (int j = 0; j < m_nodeCount - 1; j++)
 		{
+			//if the currents next is less than the current
 			if (currentNode->next->data < currentNode->data)
 			{
+				//Swap the nodes data
 				tempNode->data = currentNode->next->data;
 				currentNode->next->data = currentNode->data;
 				currentNode->data = tempNode->data;
 			}
+			//and go to the next node
 			currentNode = currentNode->next;
 		}
 	}
